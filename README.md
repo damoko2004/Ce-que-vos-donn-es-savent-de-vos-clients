@@ -22,6 +22,10 @@ travailler, s'entraîner et vérifier — pas l'ouvrage.
 
 ## Démarrer
 
+Ces commandes **ne téléchargent pas l'ouvrage** : elles régénèrent ses jeux de
+données et vérifient que les résultats publiés sortent aux valeurs imprimées.
+Le texte du livre n'est pas diffusé ici.
+
 ```bash
 git clone https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients.git
 cd Ce-que-vos-donn-es-savent-de-vos-clients
