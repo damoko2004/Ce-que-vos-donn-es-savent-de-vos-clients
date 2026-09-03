@@ -1,0 +1,18 @@
+# SH-PG3-04 — Sortie destinée au superviseur
+# Projet Surveyops
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+ENQUETEUR E043 - risque eleve
+  Duree mediane        14 min   (equipe : 34 min)
+  Points GPS repetes   31 %     (equipe : 4 %)
+  Indice de Whipple    183      (enquete : 117)
+  Base                 198 entretiens
+  PROCEDURE APPLICABLE   manuel superviseur, section 6.4
+  ACTIONS PROPOSEES
+    1. Suspendre l affectation de nouveaux menages
+    2. Contre-appeler 5 questionnaires tires au sort parmi les 198
+    3. Visite de terrain et reprise du protocole
+    4. Statuer apres les contre-appels, pas avant
+  VALIDATION HUMAINE REQUISE - aucune action automatique

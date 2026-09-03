@@ -1,0 +1,19 @@
+# SH-PG3-09 — Exemple de réponse attendue
+# Projet Surveyops
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+QUESTION
+  Un menage selectionne a demenage hors de la grappe.
+  Peut-on le remplacer ?
+REPONSE
+  Oui, sous conditions. Le manuel superviseur prevoit le remplacement
+  apres trois tentatives documentees a des jours et horaires differents [1].
+  Le menage de remplacement est tire dans la liste de reserve de la meme
+  grappe, jamais choisi par l enqueteur [2].
+  Le motif est saisi dans le formulaire de non-reponse [1].
+  [1] manuel_superviseur.pdf, section 6.4, version du 12/03
+  [2] plan_echantillonnage.pdf, section 3.2
+  Si la liste de reserve est epuisee :
+  INFORMATION INSUFFISANTE - escalade au coordinateur national.

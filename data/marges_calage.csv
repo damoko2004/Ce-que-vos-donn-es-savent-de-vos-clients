@@ -1,0 +1,6 @@
+coefficient,total
+(Intercept),18000
+sexeH,8640
+classe_age35plus,8100
+classe_agemoins15,3200
+milieuUrbain,7200

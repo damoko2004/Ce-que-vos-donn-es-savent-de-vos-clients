@@ -1,0 +1,46 @@
+# SH-C03-04 — SQL DuckDB - reconstruire à n importe quelle date
+# Chapitre 3 — Projet — La fabrique du client 360
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+-- Une commande peut avoir plusieurs versions dans RAW : RAW est append-only.
+-- 1. Vue "meilleur etat connu" : derniere version disponible aujourd hui.
+CREATE OR REPLACE VIEW commandes_reelles AS
+WITH versions AS (
+  SELECT *, row_number() OVER (
+      PARTITION BY commande_id
+      ORDER BY source_updated_at DESC, _ingested_at DESC) AS rn
+  FROM raw_commandes
+)
+SELECT * EXCLUDE (rn)
+FROM versions
+WHERE rn = 1 AND statut <> 'annulee';
+-- 2. Vue "telle qu on la connaissait" a la date d : apprentissage/audit.
+CREATE OR REPLACE MACRO commandes_vues_le(d) AS TABLE
+WITH versions AS (
+  SELECT *, row_number() OVER (
+      PARTITION BY commande_id
+      ORDER BY source_updated_at DESC, _ingested_at DESC) AS rn
+  FROM raw_commandes
+  WHERE _ingested_at < d
+)
+SELECT * EXCLUDE (rn)
+FROM versions
+WHERE rn = 1 AND statut <> 'annulee';
+CREATE OR REPLACE MACRO customer_360(date_ref) AS TABLE
+WITH fenetre AS (
+  SELECT * FROM commandes_vues_le(date_ref)
+  WHERE date_commande < date_ref
+    AND date_commande >= date_ref - INTERVAL 365 DAY
+)
+SELECT
+  c.client_id,
+  date_ref AS date_ref,
+  COUNT(f.commande_id) AS nb_achats_12m,
+  COALESCE(SUM(f.montant), 0) AS ca_12m,
+  COALESCE(SUM(f.marge), 0) AS marge_12m,
+  date_diff('day', MAX(f.date_commande), date_ref) AS recence_jours
+FROM dim_client c
+LEFT JOIN fenetre f USING (client_id)
+GROUP BY c.client_id, date_ref;

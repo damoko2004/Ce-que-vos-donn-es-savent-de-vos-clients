@@ -1,0 +1,19 @@
+# SH-AXA-01 — Installation complète
+# Annexes
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+python -m venv .venv
+source .venv/bin/activate      # Windows : .venv\\Scripts\\activate
+# Socle : parties I a VI
+pip install pandas numpy scikit-learn scipy statsmodels matplotlib shap pytest
+# Formats, donnees et images : chapitres 3, 33, 34, projets
+pip install pyarrow duckdb requests beautifulsoup4 pillow torch torchvision
+# Texte : chapitre 32
+pip install spacy rank-bm25
+python -m spacy download fr_core_news_md
+# Recherche et generation : chapitres 36, 39, 40
+pip install sentence-transformers faiss-cpu
+# Service et orchestration : chapitres 39 et 40
+pip install fastapi uvicorn pydantic langgraph

@@ -1,0 +1,13 @@
+modele,cas_usage,conformite,fidelite,latence_p90_ms,cout_1k_requetes,cout_hebergement_1k,cout_exploitation_1k,hebergeable_interne
+mistral-interne-v2,synthese_credit,0.929,0.904,1913,6.83,0.4,0.61,True
+mistral-interne-v2,recherche_procedures,0.981,0.926,1648,7.89,1.51,0.41,True
+mistral-interne-v2,analyse_contrats,0.889,0.962,2923,1.32,1.7,0.38,True
+mistral-interne-v1,synthese_credit,0.88,0.908,1197,7.74,1.69,0.77,True
+mistral-interne-v1,recherche_procedures,0.883,0.925,2022,3.88,0.22,0.16,True
+mistral-interne-v1,analyse_contrats,0.946,0.907,790,7.36,0.46,0.6,False
+modele-externe-a,synthese_credit,0.912,0.97,2315,4.14,0.21,0.67,False
+modele-externe-a,recherche_procedures,0.888,0.95,2757,7.32,0.61,0.88,False
+modele-externe-a,analyse_contrats,0.94,0.958,1463,6.76,1.72,0.83,True
+modele-externe-b,synthese_credit,0.91,0.965,1232,7.0,0.51,0.37,True
+modele-externe-b,recherche_procedures,0.897,0.901,1074,4.22,0.45,0.48,False
+modele-externe-b,analyse_contrats,0.901,0.921,2292,5.11,0.56,0.11,True

@@ -1,0 +1,32 @@
+name: Verification du code et des donnees
+
+on: [push, pull_request]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Dependances minimales
+        run: pip install pandas numpy scikit-learn scipy statsmodels pytest
+      - name: Syntaxe des 62 blocs Python
+        run: python -m compileall -q python/
+      - name: Generation des donnees et controle des chiffres publies
+        run: python data/generer.py
+      - name: Tests
+        run: pytest tests/ -q
+
+  r:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with: { r-version: "4.3.3" }
+      - name: Syntaxe des 24 blocs R
+        run: |
+          for f in $(find r -name "*.R"); do
+            Rscript -e "invisible(parse('$f'))" || exit 1
+          done
+          echo "Tous les blocs R sont syntaxiquement valides."

@@ -1,0 +1,18 @@
+# SH-C03-08 — SQL - le premier réflexe, en quinze secondes
+# Chapitre 3 — Projet — La fabrique du client 360
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+-- Volumes par canal, hier contre la moyenne des quatre semaines.
+SELECT canal,
+       count(*) FILTER (WHERE date_commande = current_date - 1)  AS hier,
+       count(*) FILTER (WHERE date_commande BETWEEN current_date - 29
+                                              AND current_date - 2) / 28.0 AS moyenne
+FROM raw_commandes
+GROUP BY canal
+ORDER BY canal;
+-- canal    hier    moyenne
+-- app       412      396
+-- magasin     0      500     <-- le probleme est ici
+-- web      1893     1856

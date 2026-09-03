@@ -1,0 +1,15 @@
+# SH-C03-01 — Zones et flux
+# Chapitre 3 — Projet — La fabrique du client 360
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+SOURCES              RAW                CONTROLE           METIER
+crm.csv         ┐                                            ┌ dim_client
+commandes.csv   │    raw_clients                             │ fact_commande
+tickets.json    ├──► raw_commandes ──► quality_gate ──►──────┤ fact_contact
+weblog.parquet  │    raw_tickets        18 controles         │ customer_360_daily
+satisfaction.csv┘    raw_web           BLOCK ou WARN         └ etl_runs
+                     raw_satisfaction
+                     (conserve tel quel,
+                      jamais modifie)

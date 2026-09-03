@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ce que vos données savent de vos clients — code, données et sommaire</title>
+<meta name="description" content="Dépôt compagnon du livre : les 96 blocs de code R et Python, tous les jeux de données, et le sommaire des 40 chapitres. Chaque chiffre publié est régénérable.">
+<meta property="og:title" content="Ce que vos données savent de vos clients">
+<meta property="og:description" content="Le code R et Python du livre, ses jeux de données et son sommaire. Reproductible de bout en bout.">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --navy:#1B3A57; --accent:#9C6B3C; --encre:#1c1c1c; --gris:#5A5A5A;
+  --papier:#FBF9F6; --carte:#ffffff; --trait:#e6e0d8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--papier);color:var(--encre);
+     font-family:var(--serif);font-size:18px;line-height:1.65;
+     -webkit-font-smoothing:antialiased}
+.enveloppe{max-width:1080px;margin:0 auto;padding:0 24px}
+a{color:var(--navy)}
+h1,h2,h3{line-height:1.2;margin:0}
+.petit{font-size:.82rem;letter-spacing:.09em;text-transform:uppercase;
+       color:var(--accent);font-weight:700}
+
+/* barre */
+.barre{position:sticky;top:0;z-index:50;background:rgba(251,249,246,.94);
+       backdrop-filter:blur(8px);border-bottom:1px solid var(--trait)}
+.barre .enveloppe{display:flex;align-items:center;justify-content:space-between;
+                  gap:18px;padding-top:12px;padding-bottom:12px}
+.marque{font-weight:700;color:var(--navy);font-size:1rem;letter-spacing:.01em}
+.nav a{margin-left:20px;text-decoration:none;color:var(--gris);font-size:.92rem}
+.nav a:hover{color:var(--navy)}
+.bouton{display:inline-block;background:var(--navy);color:#fff!important;
+        text-decoration:none;padding:11px 20px;border-radius:3px;font-size:.92rem;
+        font-weight:600;border:1px solid var(--navy)}
+.bouton.clair{background:transparent;color:var(--navy)!important}
+.bouton:hover{opacity:.9}
+
+/* couverture */
+.couverture{padding:88px 0 64px;border-bottom:1px solid var(--trait)}
+.couverture h1{font-size:clamp(2.1rem,5.2vw,3.5rem);color:var(--navy);
+               letter-spacing:-.01em;margin:16px 0 0}
+.soustitre{font-size:clamp(1.05rem,2.2vw,1.4rem);color:#333;margin:20px 0 6px}
+.tech{color:var(--accent);font-weight:700;letter-spacing:.16em;font-size:.95rem;margin-top:14px}
+.filet{width:96px;height:3px;background:var(--accent);margin:26px 0}
+.accroche{border-left:3px solid var(--accent);padding:4px 0 4px 20px;
+          margin:32px 0;font-size:1.14rem;color:#2a2a2a;max-width:56ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+
+/* compteurs */
+.compteurs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+           gap:1px;background:var(--trait);border:1px solid var(--trait);margin:52px 0 0}
+.compteurs div{background:var(--papier);padding:20px 16px;text-align:center}
+.compteurs b{display:block;font-size:1.9rem;color:var(--navy);line-height:1}
+.compteurs span{font-size:.8rem;color:var(--gris);letter-spacing:.04em}
+
+section{padding:64px 0;border-bottom:1px solid var(--trait)}
+section h2{font-size:clamp(1.5rem,3.2vw,2.1rem);color:var(--navy);margin:10px 0 14px;max-width:24ch}
+.chapo{color:#3a3a3a;max-width:62ch;margin-bottom:8px}
+
+/* parties */
+.partie{border:1px solid var(--trait);background:var(--carte);margin:22px 0;
+        border-radius:4px;overflow:hidden}
+.partie>summary{cursor:pointer;list-style:none;padding:20px 24px;display:flex;
+                gap:18px;align-items:baseline;flex-wrap:wrap}
+.partie>summary::-webkit-details-marker{display:none}
+.partie>summary:hover{background:#faf7f3}
+.partie .num{color:var(--accent);font-weight:700;font-size:.8rem;letter-spacing:.12em;
+             min-width:74px}
+.partie .verbe{color:var(--navy);font-weight:700;font-size:1.22rem}
+.partie .desc{color:var(--gris);font-size:.94rem;flex:1 1 260px}
+.partie ol{margin:0;padding:4px 24px 22px 76px}
+.partie li{padding:6px 0;border-top:1px solid #f0ebe4;font-size:.99rem}
+.partie li:first-child{border-top:0}
+.partie li span{color:var(--gris);font-size:.86rem}
+
+/* grilles */
+.grille{display:grid;gap:18px;margin-top:26px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.carte{background:var(--carte);border:1px solid var(--trait);border-radius:4px;padding:22px}
+.carte h3{color:var(--navy);font-size:1.06rem;margin-bottom:8px}
+.carte p{margin:0;font-size:.95rem;color:#444}
+.carte .etiq{font-family:var(--mono);font-size:.74rem;color:var(--accent);
+             letter-spacing:.06em;display:block;margin-bottom:8px}
+
+/* tableau */
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:.93rem;background:var(--carte)}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 13px;font-size:.84rem;
+   letter-spacing:.03em}
+td{padding:10px 13px;border-top:1px solid var(--trait);vertical-align:top}
+tr:nth-child(even) td{background:#f7f4f0}
+code{font-family:var(--mono);font-size:.86em;background:#f0ece6;padding:1px 5px;border-radius:3px}
+pre{background:#F5F7F9;border:1px solid #dce3ea;border-left:3px solid var(--navy);
+    padding:16px 18px;overflow-x:auto;border-radius:3px;font-size:.84rem;line-height:1.55}
+pre code{background:none;padding:0}
+
+/* encadre */
+.encadre{background:#F8F5F0;border:1px solid var(--trait);border-left:4px solid var(--accent);
+         padding:20px 24px;margin:26px 0;border-radius:3px}
+.encadre .petit{margin-bottom:8px;display:block}
+.encadre p{margin:0;font-size:.97rem}
+
+/* pied */
+footer{background:var(--navy);color:#dfe6ec;padding:56px 0 34px;font-size:.92rem}
+footer h4{color:#fff;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+          margin:0 0 10px}
+footer a{color:#fff}
+.piedgrille{display:grid;gap:30px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.mentions{border-top:1px solid rgba(255,255,255,.18);margin-top:34px;padding-top:18px;
+          font-size:.82rem;color:#aebccb}
+@media(max-width:640px){
+  body{font-size:17px}
+  .nav{display:none}
+  .partie ol{padding-left:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="barre">
+  <div class="enveloppe">
+    <span class="marque">Ce que vos données savent de vos clients</span>
+    <nav class="nav">
+      <a href="#sommaire">Sommaire</a>
+      <a href="#code">Code</a>
+      <a href="#donnees">Données</a>
+      <a href="#demarrer">Démarrer</a>
+      <a href="#reproductibilite">Reproductibilité</a>
+    </nav>
+    <a class="bouton" href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients">Dépôt GitHub</a>
+  </div>
+</div>
+
+<header class="couverture">
+  <div class="enveloppe">
+    <span class="petit">Dépôt compagnon du livre · Édition 2026</span>
+    <h1>Ce que vos données<br>savent de vos clients</h1>
+    <div class="filet"></div>
+    <p class="soustitre">De la question métier à l’impact prouvé</p>
+    <p class="soustitre" style="font-size:1rem;color:#555">Machine learning, IA générative et décision</p>
+    <p class="tech">R &nbsp;•&nbsp; PYTHON</p>
+
+    <div class="accroche">
+      L’IA peut écrire votre code. Elle peut entraîner votre modèle.
+      Elle ne sait pas, à votre place, quelle décision mérite d’être améliorée.
+    </div>
+
+    <p style="max-width:62ch;color:#3a3a3a">
+      Cette page donne accès à tout ce qui accompagne l’ouvrage : le <b>sommaire complet</b>,
+      les <b>96 blocs de code</b> en R et en Python, et <b>tous les jeux de données</b>.
+      Le livre lui-même n’est pas publié ici.
+    </p>
+
+    <div class="actions">
+      <a class="bouton" href="#demarrer">Démarrer en trois commandes</a>
+      <a class="bouton clair" href="#sommaire">Parcourir le sommaire</a>
+    </div>
+
+    <div class="compteurs">
+      <div><b>11</b><span>parties</span></div>
+      <div><b>40</b><span>chapitres</span></div>
+      <div><b>21</b><span>cas métiers</span></div>
+      <div><b>16</b><span>exercices</span></div>
+      <div><b>6</b><span>projets</span></div>
+      <div><b>96</b><span>blocs de code</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="pourquoi">
+  <div class="enveloppe">
+    <span class="petit">La thèse</span>
+    <h2>Le modèle n’a jamais été le problème</h2>
+    <p class="chapo">
+      Les bibliothèques sont gratuites et la documentation abondante : un modèle correct
+      s’entraîne en une après-midi. Ce qui bloque se situe avant et après. Avant, parce que
+      personne n’a formulé la décision que le modèle est censé améliorer. Après, parce que le
+      score arrive dans un tableau que personne ne sait utiliser, et que nul ne peut dire six
+      mois plus tard si l’opération a rapporté quelque chose.
+    </p>
+    <div class="grille g3">
+      <div class="carte">
+        <span class="etiq">AVANT</span>
+        <h3>Formuler</h3>
+        <p>Traduire une préoccupation commerciale en problème soluble : une décision,
+        un horizon, une cible, une contrainte de capacité.</p>
+      </div>
+      <div class="carte">
+        <span class="etiq">PENDANT</span>
+        <h3>Construire</h3>
+        <p>La donnée datée, le modèle, l’évaluation — et le seuil qui découle du coût
+        d’une erreur, jamais d’une valeur par défaut.</p>
+      </div>
+      <div class="carte">
+        <span class="etiq">APRÈS</span>
+        <h3>Prouver</h3>
+        <p>Le groupe témoin, l’effet incrémental, la conversion en euros. Y compris quand
+        le résultat est négatif.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sommaire">
+  <div class="enveloppe">
+    <span class="petit">Le parcours</span>
+    <h2>Onze parties, quarante chapitres</h2>
+    <p class="chapo">
+      Le livre suit un parcours unique, de la question métier jusqu’à la mise à l’échelle.
+      Un fil rouge — <b>NovaRetail</b>, une entreprise de distribution — le traverse
+      d’un bout à l’autre, et chaque partie se referme sur un point d’étape.
+      Cliquez sur une partie pour en déplier les chapitres.
+    </p>
+    
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE I</span>
+          <span class="verbe">COMPRENDRE</span>
+          <span class="desc">Transformer des données dispersées en questions analysables</span>
+        </summary>
+        <ol><li><span>Chapitre 1</span> — La question métier avant l’algorithme</li><li><span>Chapitre 2</span> — Construire une vue client 360°</li><li><span>Chapitre 3</span> — Projet — La fabrique du client 360</li><li><span>Chapitre 4</span> — Explorer, nettoyer et préparer les données</li><li><span>Chapitre 5</span> — Segmentation, typologie, scoring : ne pas confondre</li><li><span>Chapitre 6</span> — Les fondamentaux du machine learning utiles ici</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE II</span>
+          <span class="verbe">SEGMENTER</span>
+          <span class="desc">Cesser de raisonner sur un client moyen qui n’existe pas</span>
+        </summary>
+        <ol><li><span>Chapitre 7</span> — Segmenter sans algorithme : PMG et RFM</li><li><span>Chapitre 8</span> — Réduire la complexité avec l’analyse en composantes principales</li><li><span>Chapitre 9</span> — K-means : créer rapidement des groupes</li><li><span>Chapitre 10</span> — Classification hiérarchique et segmentation mixte</li><li><span>Chapitre 11</span> — Cas 1 — NovaRetail : des clusters aux segments actionnables</li><li><span>Chapitre 12</span> — Du cluster au persona : faire adopter une typologie</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE III</span>
+          <span class="verbe">PRÉDIRE</span>
+          <span class="desc">Anticiper le comportement plutôt que le constater</span>
+        </summary>
+        <ol><li><span>Chapitre 13</span> — De la question métier à la cible</li><li><span>Chapitre 14</span> — Régression logistique et modèles linéaires</li><li><span>Chapitre 15</span> — Arbres, forêts et plus proches voisins</li><li><span>Chapitre 16</span> — Cas 2 — Le score d’attrition à 90 jours</li><li><span>Chapitre 17</span> — Cas 3 — Du gratuit au payant</li><li><span>Chapitre 18</span> — Cas 4 — L’attrition silencieuse</li><li><span>Chapitre 19</span> — Cas 5, 6 et 7 — Appétence, valeur et satisfaction</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE IV</span>
+          <span class="verbe">RECOMMANDER</span>
+          <span class="desc">Proposer le bon objet à la bonne personne</span>
+        </summary>
+        <ol><li><span>Chapitre 20</span> — Anatomie d’un système de recommandation</li><li><span>Chapitre 21</span> — Cas 8 — Recommander par le contenu</li><li><span>Chapitre 22</span> — Filtrage collaboratif et voisinage</li><li><span>Chapitre 23</span> — Cas 9 — Hybride et démarrage à froid</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE V</span>
+          <span class="verbe">MESURER</span>
+          <span class="desc">Savoir si l’on a raison</span>
+        </summary>
+        <ol><li><span>Chapitre 24</span> — Choisir les bonnes métriques</li><li><span>Chapitre 25</span> — Cas 10 — La campagne qui semblait marcher</li><li><span>Chapitre 26</span> — Cas 11 — Attribution, déduplication et coût d’acquisition</li><li><span>Chapitre 27</span> — Interpréter et surveiller les modèles</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE VI</span>
+          <span class="verbe">PASSER À L’ACTION</span>
+          <span class="desc">Du score à la décision, de la décision au revenu</span>
+        </summary>
+        <ol><li><span>Chapitre 28</span> — Du score au CRM</li><li><span>Chapitre 29</span> — Cas 12 et 13 — Pression commerciale et drive-to-store</li><li><span>Chapitre 30</span> — Mesurer l’impact : la discipline du retour sur investissement</li><li><span>Chapitre 31</span> — Une feuille de route en 90 jours</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE VII</span>
+          <span class="verbe">ENRICHIR</span>
+          <span class="desc">Ce que vos clients écrivent, parcourent et montrent</span>
+        </summary>
+        <ol><li><span>Chapitre 32</span> — Cas 14 — Ce que vos clients écrivent</li><li><span>Chapitre 33</span> — Cas 15 — Ce que vos clients parcourent</li><li><span>Chapitre 34</span> — Cas 16 — Ce que montrent vos images produits</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE VIII</span>
+          <span class="verbe">SUPERVISER</span>
+          <span class="desc">Travailler avec des machines qui écrivent le code</span>
+        </summary>
+        <ol><li><span>Chapitre 35</span> — Cas 17 — Refondre un pipeline avec un agent de programmation</li><li><span>Chapitre 36</span> — Cas 18 — Un assistant de réponse fondé sur vos propres données</li><li><span>Chapitre 37</span> — Cas 19, 20 et 21 — Apprendre en agissant</li><li><span>Chapitre 38</span> — Ce qui ne se délègue pas</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE IX</span>
+          <span class="verbe">S’EXERCER</span>
+          <span class="desc">Quinze demandes mal formulées, et trois projets</span>
+        </summary>
+        <ol><li><span>15 exercices corrigés</span> — A1 à F1, à double correction technique et senior, avec barème sur 20</li><li><span>3 projets de synthèse</span> — le négociateur augmenté, le quant augmenté, SurveyOps</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE X</span>
+          <span class="verbe">LIVRER</span>
+          <span class="desc">Conduire un système de l’hypothèse à la production</span>
+        </summary>
+        <ol><li><span>Chapitre 39</span> — Projet de production — Douze mois chez Kairo</li></ol>
+      </details>
+      <details class="partie">
+        <summary>
+          <span class="num">PARTIE XI</span>
+          <span class="verbe">PASSER À L’ÉCHELLE</span>
+          <span class="desc">Un portefeuille agentique, sa gouvernance et sa sécurité</span>
+        </summary>
+        <ol><li><span>Chapitre 40</span> — Projet de passage à l’échelle — Le programme Agents</li></ol>
+      </details>
+  </div>
+</section>
+
+<section id="code">
+  <div class="enveloppe">
+    <span class="petit">Le code</span>
+    <h2>Quatre-vingt-seize blocs, en R et en Python</h2>
+    <p class="chapo">
+      Chaque bloc du livre porte un identifiant de la forme <code>PY-C08-01</code> ou
+      <code>R-C07-02</code> : la langue, le chapitre, le rang. On le retrouve ici sous le
+      même nom. Le code est commenté ligne à ligne dans l’ouvrage ; les fichiers sont
+      livrés tels qu’imprimés, avec leur en-tête de contexte.
+    </p>
+
+    <div class="grille g3" style="margin-bottom:8px">
+      <div class="carte"><span class="etiq">PYTHON</span><h3>62 blocs</h3>
+        <p>pandas, scikit-learn, statsmodels, SHAP, FastAPI, LangGraph.
+        Syntaxe validée, chaîne du fil rouge exécutée.</p></div>
+      <div class="carte"><span class="etiq">R</span><h3>24 blocs</h3>
+        <p>dplyr, FactoMineR, survey, glmnet, quanteda — et trois applications Shiny
+        complètes.</p></div>
+      <div class="carte"><span class="etiq">RESSOURCES</span><h3>10 blocs</h3>
+        <p>Schémas d’architecture, configurations YAML, arborescences et commandes
+        d’installation.</p></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Contexte</th><th>Blocs</th><th>Fichiers</th></tr></thead>
+      <tbody><tr><td><b>Chapitre 2 — Construire une vue client 360°</b></td><td style="white-space:nowrap">1 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_02/PY-C02-01_construire_une_table_datee.py"><code>PY-C02-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_02/R-C02-02_equivalent.R"><code>R-C02-02</code></a></td></tr><tr><td><b>Chapitre 3 — Projet — La fabrique du client 360</b></td><td style="white-space:nowrap">5 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_03/PY-C03-02_un_contrat_de_schema_par_source.py"><code>PY-C03-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_03/PY-C03-03_normaliser_avant_de_rapprocher.py"><code>PY-C03-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_03/PY-C03-05_python_et_sql_repere_temporel_et_fusion_idempotente.py"><code>PY-C03-05</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_03/PY-C03-06_la_barriere_et_sa_trace.py"><code>PY-C03-06</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_03/PY-C03-07_le_flux_complet_executable_en_local.py"><code>PY-C03-07</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_03/R-C03-09_auditer_le_rapprochement_depuis_le_meme_entrepot.R"><code>R-C03-09</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/chapitre_03/SH-C03-01_zones_et_flux.txt"><code>SH-C03-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/chapitre_03/SH-C03-04_sql_duckdb_reconstruire_a_n_importe_quelle_date.txt"><code>SH-C03-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/chapitre_03/SH-C03-08_sql_le_premier_reflexe_en_quinze_secondes.txt"><code>SH-C03-08</code></a></td></tr><tr><td><b>Chapitre 4 — Explorer, nettoyer et préparer les données</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_04/PY-C04-01_fiche_de_sante.py"><code>PY-C04-01</code></a></td></tr><tr><td><b>Chapitre 7 — Segmenter sans algorithme : PMG et RFM</b></td><td style="white-space:nowrap">1 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_07/PY-C07-01_segmentation_rfm_par_seuils_metier.py"><code>PY-C07-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_07/R-C07-02_equivalent_memes_seuils.R"><code>R-C07-02</code></a></td></tr><tr><td><b>Chapitre 8 — Réduire la complexité avec l’analyse en composantes principales</b></td><td style="white-space:nowrap">1 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_08/PY-C08-01_acp_normee_sur_clients_360.py"><code>PY-C08-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_08/R-C08-02_avec_factominer.R"><code>R-C08-02</code></a></td></tr><tr><td><b>Chapitre 9 — K-means : créer rapidement des groupes</b></td><td style="white-space:nowrap">1 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_09/PY-C09-01_k_means_avec_choix_de_k.py"><code>PY-C09-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_09/R-C09-02_equivalent.R"><code>R-C09-02</code></a></td></tr><tr><td><b>Chapitre 10 — Classification hiérarchique et segmentation mixte</b></td><td style="white-space:nowrap">1 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_10/PY-C10-02_equivalent.py"><code>PY-C10-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_10/R-C10-01_cah_de_ward_et_dendrogramme.R"><code>R-C10-01</code></a></td></tr><tr><td><b>Chapitre 11 — Cas 1 — NovaRetail : des clusters aux segments actionnables</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_11/PY-C11-01_caracterisation_des_segments.py"><code>PY-C11-01</code></a></td></tr><tr><td><b>Chapitre 14 — Régression logistique et modèles linéaires</b></td><td style="white-space:nowrap">2 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_14/PY-C14-01_regression_logistique_avec_ponderation.py"><code>PY-C14-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_14/PY-C14-03_lasso_et_chemin_de_regularisation.py"><code>PY-C14-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_14/R-C14-02_equivalent.R"><code>R-C14-02</code></a></td></tr><tr><td><b>Chapitre 15 — Arbres, forêts et plus proches voisins</b></td><td style="white-space:nowrap">2 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_15/PY-C15-01_foret_aleatoire_et_importance_des_variables.py"><code>PY-C15-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_15/PY-C15-02_k_nn_et_effet_de_k.py"><code>PY-C15-02</code></a></td></tr><tr><td><b>Chapitre 16 — Cas 2 — Le score d’attrition à 90 jours</b></td><td style="white-space:nowrap">2 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_16/PY-C16-01_validation_temporelle.py"><code>PY-C16-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_16/PY-C16-02_la_table_qui_interesse_le_metier.py"><code>PY-C16-02</code></a></td></tr><tr><td><b>Chapitre 17 — Cas 3 — Du gratuit au payant</b></td><td style="white-space:nowrap">2 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_17/PY-C17-01_variables_d_usage_et_modele.py"><code>PY-C17-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_17/PY-C17-02_calibration_indispensable_ici.py"><code>PY-C17-02</code></a></td></tr><tr><td><b>Chapitre 18 — Cas 4 — L’attrition silencieuse</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_18/PY-C18-01_indice_de_desengagement.py"><code>PY-C18-01</code></a></td></tr><tr><td><b>Chapitre 19 — Cas 5, 6 et 7 — Appétence, valeur et satisfaction</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_19/PY-C19-01_appetence_multi_produits.py"><code>PY-C19-01</code></a></td></tr><tr><td><b>Chapitre 21 — Cas 8 — Recommander par le contenu</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_21/PY-C21-01_profils_et_similarite.py"><code>PY-C21-01</code></a></td></tr><tr><td><b>Chapitre 22 — Filtrage collaboratif et voisinage</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_22/PY-C22-01_filtrage_collaboratif_centre_objet.py"><code>PY-C22-01</code></a></td></tr><tr><td><b>Chapitre 24 — Choisir les bonnes métriques</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_24/PY-C24-01_le_tableau_de_bord_d_evaluation.py"><code>PY-C24-01</code></a></td></tr><tr><td><b>Chapitre 25 — Cas 10 — La campagne qui semblait marcher</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_25/PY-C25-01_dimensionner_et_analyser_un_test.py"><code>PY-C25-01</code></a></td></tr><tr><td><b>Chapitre 27 — Interpréter et surveiller les modèles</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_27/PY-C27-01_expliquer_un_score_individuel.py"><code>PY-C27-01</code></a></td></tr><tr><td><b>Chapitre 32 — Cas 14 — Ce que vos clients écrivent</b></td><td style="white-space:nowrap">4 Python · 1 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_32/PY-C32-01_normalisation_et_matrice_terme_document.py"><code>PY-C32-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_32/PY-C32-02_decouvrir_les_themes_sans_les_connaitre.py"><code>PY-C32-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_32/PY-C32-04_classer_automatiquement_une_reclamation_entrante.py"><code>PY-C32-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_32/PY-C32-05_variables_textuelles_datees.py"><code>PY-C32-05</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_32/R-C32-03_equivalent_avec_quanteda.R"><code>R-C32-03</code></a></td></tr><tr><td><b>Chapitre 33 — Cas 15 — Ce que vos clients parcourent</b></td><td style="white-space:nowrap">4 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_33/PY-C33-01_nettoyage_et_sessionnisation.py"><code>PY-C33-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_33/PY-C33-02_variables_de_session_utiles_au_modele.py"><code>PY-C33-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_33/PY-C33-03_sequences_predictives.py"><code>PY-C33-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_33/PY-C33-04_collecte_respectueuse.py"><code>PY-C33-04</code></a></td></tr><tr><td><b>Chapitre 34 — Cas 16 — Ce que montrent vos images produits</b></td><td style="white-space:nowrap">4 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_34/PY-C34-01_extraire_une_representation_entrainer_une_tete_leger.py"><code>PY-C34-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_34/PY-C34-02_un_seuil_par_attribut_calibre_sur_le_cout.py"><code>PY-C34-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_34/PY-C34-03_le_controle_qui_evite_un_deploiement_rate.py"><code>PY-C34-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_34/PY-C34-04_similarite_visuelle_disponible_immediatement.py"><code>PY-C34-04</code></a></td></tr><tr><td><b>Chapitre 35 — Cas 17 — Refondre un pipeline avec un agent de programmation</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_35/PY-C35-01_le_test_qui_autorise_tout_le_reste.py"><code>PY-C35-01</code></a></td></tr><tr><td><b>Chapitre 36 — Cas 18 — Un assistant de réponse fondé sur vos propres données</b></td><td style="white-space:nowrap">3 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_36/PY-C36-01_indexation_du_corpus_documentaire.py"><code>PY-C36-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_36/PY-C36-02_recherche_hybride_et_gabarit_de_generation_contraint.py"><code>PY-C36-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_36/PY-C36-03_jeu_de_test_et_evaluation_automatisee.py"><code>PY-C36-03</code></a></td></tr><tr><td><b>Chapitre 37 — Cas 19, 20 et 21 — Apprendre en agissant</b></td><td style="white-space:nowrap">3 Python · 2 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_37/PY-C37-01_bandit_contextuel_par_echantillonnage_de_thompson.py"><code>PY-C37-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_37/PY-C37-02_la_boucle_mensuelle_avec_garde_fous.py"><code>PY-C37-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_37/PY-C37-04_selectionner_par_l_incertitude_pas_par_le_risque.py"><code>PY-C37-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_37/R-C37-03_le_meme_bandit_contextuel.R"><code>R-C37-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_37/R-C37-05_incertitude_d_une_foret_et_tournee_d_inspection.R"><code>R-C37-05</code></a></td></tr><tr><td><b>Chapitre 39 — Projet de production — Douze mois chez Kairo</b></td><td style="white-space:nowrap">3 Python · 2 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_39/PY-C39-01_un_workflow_avec_budget_validation_et_repli.py"><code>PY-C39-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_39/PY-C39-02_service_expose_instrumente_des_la_premiere_ligne.py"><code>PY-C39-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_39/PY-C39-03_banc_d_evaluation_execute_a_chaque_changement.py"><code>PY-C39-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_39/R-C39-04_analyse_comparative_de_deux_versions_du_systeme.R"><code>R-C39-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_39/R-C39-05_console_de_revue_des_echecs_d_evaluation.R"><code>R-C39-05</code></a></td></tr><tr><td><b>Chapitre 40 — Projet de passage à l’échelle — Le programme Agents</b></td><td style="white-space:nowrap">5 Python · 2 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_40/PY-C40-01_orchestration_en_graphe_d_etats_avec_garde_fous.py"><code>PY-C40-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_40/PY-C40-02_indexation_incrementale_idempotente_avec_suppression.py"><code>PY-C40-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_40/PY-C40-03_moindre_privilege_applique_aux_outils.py"><code>PY-C40-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_40/PY-C40-04_extraction_par_gabarit_avec_abstention_par_champ.py"><code>PY-C40-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/chapitre_40/PY-C40-05_calibrer_un_juge_avant_de_s_en_servir.py"><code>PY-C40-05</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_40/R-C40-08_analyse_comparative_des_modeles_testes.R"><code>R-C40-08</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/chapitre_40/R-C40-09_tableau_de_bord_du_comite_de_gouvernance.R"><code>R-C40-09</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/chapitre_40/SH-C40-06_structure_retenue_apres_le_troisieme_cas_d_usage.txt"><code>SH-C40-06</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/chapitre_40/SH-C40-07_un_cas_d_usage_se_decrit_par_sa_configuration_pas_pa.txt"><code>SH-C40-07</code></a></td></tr><tr><td><b>Annexes</b></td><td style="white-space:nowrap">0 Python · 2 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/annexes/R-AXB-01_installation.R"><code>R-AXB-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/annexes/R-AXB-02_chaine_complete_en_r.R"><code>R-AXB-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/annexes/SH-AXA-01_installation_complete.txt"><code>SH-AXA-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/annexes/SH-AXA-02_generation_du_jeu_de_donnees_fil_rouge.txt"><code>SH-AXA-02</code></a></td></tr><tr><td><b>Partie IX — Exercice D3, anticiper la demande</b></td><td style="white-space:nowrap">1 Python · 0 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/exercices/PY-C00-01_la_reference_que_tout_modele_doit_battre.py"><code>PY-C00-01</code></a></td></tr><tr><td><b>Projet Negociateur</b></td><td style="white-space:nowrap">1 Python · 2 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_negociateur/PY-PG1-01_ecarts_de_conditions_par_comparaison_ajustee.py"><code>PY-PG1-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_negociateur/R-PG1-02_equivalent_avec_intervalle_de_prediction.R"><code>R-PG1-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_negociateur/R-PG1-03_cockpit_de_preparation_de_rendez_vous.R"><code>R-PG1-03</code></a></td></tr><tr><td><b>Projet Quant</b></td><td style="white-space:nowrap">2 Python · 3 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_quant/PY-PG2-01_journal_des_specifications_non_negociable.py"><code>PY-PG2-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_quant/PY-PG2-03_validation_temporelle_glissante_et_controles.py"><code>PY-PG2-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_quant/R-PG2-02_le_meme_journal_format_identique.R"><code>R-PG2-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_quant/R-PG2-04_backtest_glissant_gini_et_indice_de_stabilite.R"><code>R-PG2-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_quant/R-PG2-05_surveillance_d_un_modele_en_production.R"><code>R-PG2-05</code></a></td></tr><tr><td><b>Projet Surveyops</b></td><td style="white-space:nowrap">4 Python · 3 R</td><td><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_surveyops/PY-PG3-01_controles_unitaires_et_indice_de_preference_numeriqu.py"><code>PY-PG3-01</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_surveyops/PY-PG3-02_du_score_heuristique_au_modele_supervise.py"><code>PY-PG3-02</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_surveyops/PY-PG3-03_le_plan_de_supervision_du_lendemain.py"><code>PY-PG3-03</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/python/projet_surveyops/PY-PG3-08_generateur_avec_verite_de_terrain.py"><code>PY-PG3-08</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_surveyops/R-PG3-05_la_proportion_brute_n_est_pas_une_estimation.R"><code>R-PG3-05</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_surveyops/R-PG3-06_ponderation_en_trois_temps.R"><code>R-PG3-06</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/r/projet_surveyops/R-PG3-07_le_poste_de_commandement_de_la_collecte.R"><code>R-PG3-07</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/projet_surveyops/SH-PG3-04_sortie_destinee_au_superviseur.txt"><code>SH-PG3-04</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/projet_surveyops/SH-PG3-09_exemple_de_reponse_attendue.txt"><code>SH-PG3-09</code></a> · <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/ressources/projet_surveyops/SH-PG3-10_declarer_l_enquete_plutot_que_la_programmer.txt"><code>SH-PG3-10</code></a></td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="donnees">
+  <div class="enveloppe">
+    <span class="petit">Les données</span>
+    <h2>Tout se régénère à partir d’un script</h2>
+    <p class="chapo">
+      Aucun jeu de données n’est un fichier figé venu d’ailleurs :
+      <code>data/generer.py</code> les produit tous, avec une graine fixée et des
+      assertions qui vérifient la conformité aux chiffres publiés. Les fichiers sont
+      également versionnés pour qui veut aller vite.
+    </p>
+
+    <table>
+      <thead><tr><th>Jeu de données</th><th>Contenu</th><th>Utilisé par</th></tr></thead>
+      <tbody>
+        <tr><td><code>clients_360.csv</code></td>
+            <td>80 000 clients, 15 variables, cible de churn à 90 jours</td>
+            <td>Le fil rouge NovaRetail, parties I à VII</td></tr>
+        <tr><td><code>brut/crm_clients.csv.gz</code></td>
+            <td>Identités, avec 1 500 doublons et adresses mal formées</td>
+            <td>Projet ETL, chapitre 3</td></tr>
+        <tr><td><code>brut/commandes.csv.gz</code></td>
+            <td>Commandes datées, annulations et remboursements</td>
+            <td>Projet ETL, chapitres 2 et 3</td></tr>
+        <tr><td><code>brut/tickets.json.gz</code></td>
+            <td>Tickets du service client, certains sans date de clôture</td>
+            <td>Projet ETL, chapitre 3</td></tr>
+        <tr><td><code>brut/satisfaction.csv</code></td>
+            <td>Enquête, 11 % de répondants — le biais est volontaire</td>
+            <td>Chapitres 3 et 19</td></tr>
+        <tr><td><code>brut/weblog.csv.gz</code></td>
+            <td>Sessions de navigation</td>
+            <td>Chapitre 33, web mining</td></tr>
+        <tr><td><code>surveyops/collecte.csv</code></td>
+            <td>18 000 questionnaires, 75 enquêteurs, paradonnées</td>
+            <td>Projet SurveyOps</td></tr>
+        <tr><td><code>surveyops/verite_terrain.csv</code></td>
+            <td>Anomalies injectées — permet de calculer précision et rappel réels</td>
+            <td>Projet SurveyOps</td></tr>
+        <tr><td><code>catalogue.csv</code></td>
+            <td>12 000 références, attributs partiellement manquants</td>
+            <td>Chapitres 21 et 34</td></tr>
+        <tr><td><code>accords_fournisseurs.csv</code></td>
+            <td>3 000 accords, conditions et volumes</td>
+            <td>Projet du négociateur augmenté</td></tr>
+      </tbody>
+    </table>
+
+    <div class="encadre">
+      <span class="petit">Données synthétiques, et pourquoi</span>
+      <p>Tous ces jeux sont générés. Aucune donnée réelle d’entreprise ou de personne
+      n’est diffusée ici, et le livre le dit explicitement. Les jeux sont construits pour
+      porter les structures qu’ils doivent enseigner — corrélations latentes, biais de
+      sélection, anomalies connues — et non pour imiter une base particulière.</p>
+    </div>
+  </div>
+</section>
+
+<section id="demarrer">
+  <div class="enveloppe">
+    <span class="petit">Prise en main</span>
+    <h2>Trois commandes, et vous reproduisez le livre</h2>
+
+    <pre><code>git clone https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients.git
+cd Ce-que-vos-donn-es-savent-de-vos-clients
+pip install -r requirements.txt
+python data/generer.py</code></pre>
+
+    <p class="chapo" style="margin-top:20px">
+      Le générateur affiche ses contrôles. Vous devez lire exactement ceci :
+    </p>
+    <pre><code>Controles conformes aux chiffres publies :
+   80 000 clients, 4,6 % de churn, 63 534 actifs
+   RFM : 23 654 endormis, 20 267 champions</code></pre>
+
+    <p class="chapo" style="margin-top:20px">
+      Pour la partie R, depuis la racine du dépôt :
+    </p>
+    <pre><code>Rscript r/installer.R
+Rscript r/chapitre_07/R-C07-02_equivalent_memes_seuils.R</code></pre>
+
+    <div class="encadre">
+      <span class="petit">Ordre de lecture du code</span>
+      <p>Les blocs d’un même chapitre se lisent dans l’ordre de leur rang :
+      <code>PY-C08-01</code> avant <code>PY-C08-02</code>. Certains réutilisent les objets
+      créés par le précédent, exactement comme dans un carnet de notes. Les en-têtes de
+      fichier rappellent le chapitre d’origine.</p>
+    </div>
+  </div>
+</section>
+
+<section id="reproductibilite">
+  <div class="enveloppe">
+    <span class="petit">Reproductibilité</span>
+    <h2>Chaque chiffre du fil rouge est régénérable</h2>
+    <p class="chapo">
+      C’est l’exigence que le livre s’applique à lui-même : aucun tableau de NovaRetail
+      n’est saisi à la main. Voici ce que produit le code, et ce qu’imprime l’ouvrage.
+    </p>
+
+    <table>
+      <thead><tr><th>Vérification</th><th>Imprimé</th><th>Exécuté</th></tr></thead>
+      <tbody>
+        <tr><td>Clients générés</td><td>80 000</td><td>80 000</td></tr>
+        <tr><td>Taux de churn à 90 jours</td><td>4,6 %</td><td>4,6 %</td></tr>
+        <tr><td>Clients actifs</td><td>63 534</td><td>63 534</td></tr>
+        <tr><td>RFM — Endormis</td><td>23 654 · 5,4 %</td><td>23 654 · 5,4 %</td></tr>
+        <tr><td>RFM — Champions</td><td>20 267 · 66,1 %</td><td>20 267 · 66,1 %</td></tr>
+        <tr><td>ACP, axes 1 à 3</td><td>35,1 · 12,2 · 10,4 %</td><td>35,1 · 12,2 · 10,4 %</td></tr>
+        <tr><td>Typologie, 5 segments</td><td>2 637 · 14 114 · 17 408 · 16 353 · 13 022</td>
+            <td>identiques</td></tr>
+      </tbody>
+    </table>
+
+    <div class="encadre">
+      <span class="petit">R et Python donnent le même résultat</span>
+      <p>Ce n’est pas une affirmation, c’est une mesure. Le bloc <code>R-C07-02</code>
+      exécuté sous R rend les mêmes effectifs que son équivalent Python, et
+      <b>FactoMineR</b> donne 35,087 / 12,204 / 10,387 % là où <b>scikit-learn</b>
+      donne 35,1 / 12,2 / 10,4.</p>
+    </div>
+  </div>
+</section>
+
+<section id="livre">
+  <div class="enveloppe">
+    <span class="petit">L’ouvrage</span>
+    <h2>Ce qui n’est pas ici</h2>
+    <p class="chapo">
+      Le texte du livre n’est pas publié dans ce dépôt, et ne le sera pas. On y trouve
+      son sommaire, son code et ses données — de quoi travailler, s’entraîner et vérifier,
+      mais pas l’ouvrage lui-même.
+    </p>
+    <div class="grille g2">
+      <div class="carte">
+        <h3>Dans le dépôt</h3>
+        <p>Le sommaire des 40 chapitres · les 96 blocs de code R et Python ·
+        les 10 jeux de données et leur générateur · les dépendances figées.</p>
+      </div>
+      <div class="carte">
+        <h3>Dans le livre seulement</h3>
+        <p>Les 21 cas d’entreprise · les 16 exercices et leurs doubles corrections ·
+        les 6 projets complets · le commentaire ligne à ligne du code.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="enveloppe">
+    <div class="piedgrille">
+      <div>
+        <h4>L’ouvrage</h4>
+        <p style="margin:0">Ce que vos données savent de vos clients<br>
+        <span style="color:#aebccb">De la question métier à l’impact prouvé</span><br>
+        Dickers AMOKO · Édition 2026</p>
+      </div>
+      <div>
+        <h4>Le dépôt</h4>
+        <p style="margin:0"><a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients">Code source</a><br>
+        <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/data/generer.py">Générateur de données</a><br>
+        <a href="https://github.com/damoko2004/Ce-que-vos-donn-es-savent-de-vos-clients/blob/main/README.md">Guide de démarrage</a></p>
+      </div>
+      <div>
+        <h4>Reproduire</h4>
+        <p style="margin:0">Python 3.12 · R 4.3<br>
+        Dépendances figées dans <code style="background:rgba(255,255,255,.12);color:#fff">requirements.txt</code></p>
+      </div>
+    </div>
+    <div class="mentions">
+      Les jeux de données diffusés ici sont entièrement synthétiques : aucune donnée réelle
+      d’entreprise ni de personne n’y figure. Les noms de logiciels et de bibliothèques cités
+      appartiennent à leurs propriétaires respectifs.<br>
+      Le texte de l’ouvrage n’est pas diffusé dans ce dépôt.
+      © 2026 Dickers AMOKO. Code sous licence MIT.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

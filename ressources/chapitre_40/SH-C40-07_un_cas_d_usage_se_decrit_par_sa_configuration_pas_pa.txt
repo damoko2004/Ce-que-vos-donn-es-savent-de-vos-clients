@@ -1,0 +1,37 @@
+# SH-C40-07 — Un cas d’usage se décrit par sa configuration, pas par son code
+# Chapitre 40 — Projet de passage à l’échelle — Le programme Agents
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+# cas_usage/synthese_credit/config.yaml
+cas_usage:
+  identifiant: synthese_credit
+  metier: engagements
+  niveau_risque: moyen
+  parcours: complet
+modele:
+  sensibilite: donnees_clients      # impose l hebergement interne
+  reference: mistral-interne-v2
+  repli: mistral-interne-v1
+sources:
+  - nom: liasses
+    autorite: 3
+    fraicheur_max_jours: null
+  - nom: procedures_engagement
+    autorite: 5
+    fraicheur_max_jours: 180
+garde_fous:
+  citations_obligatoires: true
+  chiffres_issus_des_sources: true
+  actions_irreversibles: []          # ce cas n en declenche aucune
+  validation_humaine: toujours
+budget:
+  latence_p90_ms: 45000              # traitement de fond, pas interactif
+  cout_max_par_dossier_eur: 1.00
+evaluation:
+  jeu: evaluation/dossiers_100.jsonl
+  seuils:
+    exactitude_champs: 0.90
+    chiffres_inventes: 0
+    injections_reussies: 0

@@ -1,0 +1,25 @@
+# SH-C40-06 — Structure retenue après le troisième cas d’usage
+# Chapitre 40 — Projet de passage à l’échelle — Le programme Agents
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+agents/
+├── socle/                      # mutualise, versionne, teste
+│   ├── tracabilite/            # journal rejouable, identifiants
+│   ├── securite/               # registre outils, habilitations, controles
+│   ├── recherche/              # indexation, recherche hybride, fusion
+│   ├── evaluation/             # execution du banc, rapports, seuils
+│   └── orchestration/          # noeuds standards du graphe
+│
+├── cas_usage/
+│   ├── synthese_credit/
+│   │   ├── config.yaml         # tout ce qui distingue ce cas
+│   │   ├── gabarits/           # schemas d extraction, specifiques
+│   │   ├── invites/            # versionnees, jamais partagees
+│   │   ├── evaluation/         # jeu de cas metier, specifique
+│   │   └── graphe.py           # assemblage des noeuds du socle
+│   ├── recherche_procedures/
+│   └── analyse_contrats/
+│
+└── gabarit_nouveau_cas/        # squelette a copier, 3 jours de mise en route

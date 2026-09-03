@@ -1,0 +1,19 @@
+# Le texte de l'ouvrage n'est jamais versionne
+*.docx
+*.pdf
+*.epub
+livre/
+manuscrit/
+
+# Environnements
+.venv/
+__pycache__/
+*.pyc
+.Rhistory
+.RData
+.Rproj.user/
+
+# Sorties de travail
+sorties/
+*.duckdb
+.DS_Store

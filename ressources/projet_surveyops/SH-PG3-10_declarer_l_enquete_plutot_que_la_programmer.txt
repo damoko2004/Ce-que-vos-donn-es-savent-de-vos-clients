@@ -1,0 +1,25 @@
+# SH-PG3-10 — Déclarer l enquête plutôt que la programmer
+# Projet Surveyops
+# Extrait de : Ce que vos donnees savent de vos clients
+# Le code s'execute depuis la racine du depot, apres
+# generation des donnees : python data/generer.py
+
+enquete:
+  id: ENQ_2026
+  type: menages          # menages, satisfaction, opinion, entreprise
+  unite_primaire: menage
+  unite_secondaire: individu
+sondage:
+  plan: stratifie_grappes
+  strate: strate
+  grappe: grappe
+  poids: poids_final
+  marges_calage: [sexe, classe_age, milieu]
+qualite:
+  duree_min: 15
+  duree_max: 120
+  position_requise: true
+  cles_doublon: [grappe, menage_id]
+publication:
+  effectif_minimum: 30      # en deca, estimation non publiee
+  cv_alerte: 0.30           # au-dela, a interpreter avec prudence

@@ -1,0 +1,12 @@
+cas_usage,metier,etape,risque,statut,conformite,cout_mensuel,prochaine_porte
+U01,engagements,qualifie,faible,actif,0.929,578,porte 3
+U02,engagements,prototype,moyen,arrete,0.909,896,porte 2
+U03,support,prototype,faible,arrete,0.888,1955,porte 3
+U04,engagements,qualifie,eleve,actif,0.909,287,porte 2
+U05,juridique,production,moyen,actif,0.826,538,porte 1
+U06,support,production,moyen,arrete,0.879,2161,porte 3
+U07,support,prototype,faible,actif,0.92,2499,porte 2
+U08,support,mvp,faible,actif,0.846,1481,porte 2
+U09,juridique,prototype,faible,actif,0.95,2402,porte 1
+U10,engagements,prototype,eleve,arrete,0.939,428,porte 3
+U11,support,qualifie,moyen,arrete,0.826,907,porte 3
